@@ -1,4 +1,4 @@
-# pyskim
+# pySKIM
 Repository for [SKIM Bayesian sparse regression](https://arxiv.org/abs/1905.06501) in Jax and NumPyro. Code adapted from [this paper](https://arxiv.org/abs/1905.06501) and [this tutorial](http://num.pyro.ai/en/latest/examples/sparse_regression.html) with major modifications to plotting routines
 and hyperparameter optimization. More verbose explanation coming soon. Check out the accompanying
 [Google Colab tutorial](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3?usp=sharing) highlighting the SKIM kernel technique to find predictors for COVID-19 mortality rates by country on data circa 
