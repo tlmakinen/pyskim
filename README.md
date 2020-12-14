@@ -7,10 +7,13 @@ April 2020).
 
 # installation
 To install SKIM and its dependencies in your Python environment, first clone the repository:
+
 `git clone https://github.com/tlmakinen/pyskim.git`
+
 then, 
 `cd ../pyskim`
 and install dependencies and the SKIM module via
+
 `python3 setup.py install`
 
 # usage
