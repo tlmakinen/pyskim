@@ -16,6 +16,6 @@ and install dependencies and the SKIM module via
 `python3 setup.py install`
 
 # usage
-For an intuituve walkthrough and review of the math behind the kernel, see the above Colab Notebook. To see if your module is working properly on your OS, try
+For an intuituve walkthrough and review of the math behind the kernel, see the browser-based [Colab Notebook](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3#scrollTo=iywDKXqeE6oj). To see if your module is working properly on your local OS, try
 `python _test/test.py`
 for a quick test of the module. Note for Windows subsystem for Linux users: the testing function should display a sample corner plot for the test covariates through `matplotlib`. Be sure to have X window forwarding enabled !
