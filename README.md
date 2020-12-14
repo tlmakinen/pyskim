@@ -1,7 +1,7 @@
 # pyskim
 Repository for [SKIM Bayesian sparse regression](https://arxiv.org/abs/1905.06501) in Jax and NumPyro. Code adapted from [this paper](https://arxiv.org/abs/1905.06501) and [this tutorial](http://num.pyro.ai/en/latest/examples/sparse_regression.html) with major modifications to plotting routines
 and hyperparameter optimization. More verbose explanation coming soon. Check out the accompanying
-[Google Colab tutorial](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3#scrollTo=iywDKXqeE6oj) highlighting the SKIM kernel technique to find predictors for COVID-19 mortality rates by country on data circa 
+[Google Colab tutorial](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3?usp=sharing) highlighting the SKIM kernel technique to find predictors for COVID-19 mortality rates by country on data circa 
 April 2020.
 
 # installation
@@ -16,6 +16,6 @@ and install dependencies and the SKIM module via
 `python3 setup.py install`
 
 # usage
-For an intuituve walkthrough and review of the math behind the kernel, see the browser-based [Colab Notebook](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3#scrollTo=iywDKXqeE6oj). To see if your module is working properly on your local OS, try
+For an intuituve walkthrough and review of the math behind the kernel, see the browser-based [Colab Notebook](https://colab.research.google.com/drive/1hZPsjLAQGobymd1Hc2qISJXMXscYGsU3?usp=sharing). To see if your module is working properly on your local OS, try
 `python _test/test.py`
 for a quick test of the module. Note for Windows subsystem for Linux users: the testing function should display a sample corner plot for the test covariates through `matplotlib`. Be sure to have X window forwarding enabled !
