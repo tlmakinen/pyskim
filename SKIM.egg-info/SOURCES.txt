@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+SKIM/__init__.py
+SKIM/skim.py
+SKIM.egg-info/PKG-INFO
+SKIM.egg-info/SOURCES.txt
+SKIM.egg-info/dependency_links.txt
+SKIM.egg-info/requires.txt
+SKIM.egg-info/top_level.txt
