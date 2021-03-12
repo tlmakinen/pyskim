@@ -91,8 +91,8 @@ class SKIM():
         numpyro.sample("Y", dist.MultivariateNormal(loc=np.zeros(X.shape[0]), covariance_matrix=k),
                       obs=Y)
 
-        
-        
+
+
 
     # Compute the mean and variance of coefficient theta_i (where i = dimension) for a
     # MCMC sample of the kernel hyperparameters (eta1, xisq, ...).
@@ -130,7 +130,7 @@ class SKIM():
     # Compute the mean and variance of coefficient theta_ij for a MCMC sample of the
     # kernel hyperparameters (eta1, xisq, ...). Compare to theorem 5.1 in reference [1].
     def compute_pairwise_mean_variance(self, X, Y, dim1, dim2, msq, lam, eta1, xisq, c, var_obs):
-        
+
         kernel = self.kernel
 
         # Here X is the design matrix with N x p dimensions
@@ -140,9 +140,9 @@ class SKIM():
         probe = np.zeros((4, P))
         probe = jax.ops.index_update(probe, jax.ops.index[:, dim1], np.array([1.0, 1.0, -1.0, -1.0]))
         probe = jax.ops.index_update(probe, jax.ops.index[:, dim2], np.array([1.0, -1.0, 1.0, -1.0]))
-        
-        
-        # compute eta2 and kappa from p. 18 
+
+
+        # compute eta2 and kappa from p. 18
 
         eta2 = np.square(eta1) * np.sqrt(xisq) / msq
         kappa = np.sqrt(msq) * lam / np.sqrt(msq + np.square(eta1 * lam))
@@ -172,13 +172,13 @@ class SKIM():
     # the remaining values are {theta_ij} for i,j in the list `active_dims`,
     # sorted so that i < j.
     def sample_theta_space(self, X, Y, active_dims, msq, lam, eta1, xisq, c, var_obs): #(section B.5) ?
-        
+
         kernel = self.kernel
         # Here X is the design matrix with N x p dimensions
         # read off dimensions P and N
         # and number of active dimensions
         P, N, M = X.shape[1], X.shape[0], len(active_dims)
-        
+
         # the total number of coefficients we return
         num_coefficients = P + M * (M - 1) // 2
 
@@ -231,12 +231,12 @@ class SKIM():
 
     # MODIFICATION to original method to return flat posterior samples from the
     # MCMC, but only for active dimensions
-    def sample_theta_posterior(self, X, Y, active_dims, msq, lam, eta1, xisq, c, var_obs, num_samples, dim_pair_arr): 
-        
+    def sample_theta_posterior(self, X, Y, active_dims, msq, lam, eta1, xisq, c, var_obs, num_samples, dim_pair_arr):
+
         kernel = self.kernel
 
         P, N, M = X.shape[1], X.shape[0], len(active_dims)
-        
+
         num_coefficients = P + M * (M - 1) // 2
 
         probe = np.zeros((2 * P + 2 * M * (M - 1), P))
@@ -283,35 +283,35 @@ class SKIM():
 
         # sample from N(mu, covar)
         sample = mu + np.matmul(L, onp.random.randn(num_coefficients))
-        
-        
-        # CHANGE: include active direct and pairwise interactions terms only 
+
+
+        # CHANGE: include active direct and pairwise interactions terms only
         all_active_dims = active_dims + dim_pair_arr
         mu_active = np.array([mu[i] for i in all_active_dims])
-        
+
         cov_active = []
         for j in all_active_dims:
             cov_act_j = [covar[j][i] for i in all_active_dims]
             cov_active.append(cov_act_j)
         cov_active = onp.array(cov_active)
-        
+
         # return posterior samples
         rng_key = random.PRNGKey(0)
-        samps = numpyro.distributions.MultivariateNormal(loc = onp.array(mu_active), 
+        samps = numpyro.distributions.MultivariateNormal(loc = onp.array(mu_active),
                                                         covariance_matrix = cov_active).sample(rng_key, sample_shape = (1, num_samples))
 
         samps_new = onp.reshape(samps, (num_samples, len(all_active_dims)))
-        
+
         return samps_new
 
 
     # Helper function for doing HMC inference
-    def run_inference(self, 
-                      model, 
-                      rng_key, 
+    def run_inference(self,
+                      model,
+                      rng_key,
                       X, Y, hypers,
                       num_warmup=500,
-                      num_chains=1, 
+                      num_chains=1,
                       num_samples=1000):
 
         start = time.time()
@@ -374,13 +374,13 @@ class SKIM():
         return mean, std
 
 
-    ### X - parameters, Y - data points, {alpha_i, beta_i, c} - hyperparameters, 
+    ### X - parameters, Y - data points, {alpha_i, beta_i, c} - hyperparameters,
     ### num_samples - number of samples for visualization with corner
     def generate_posterior(self, num_dimensions=20,
-                          known_active_dimensions=3, 
-                          num_data=100, labels=None,  
+                          known_active_dimensions=3,
+                          num_data=100, labels=None,
                           num_samples = 1000, num_warmup=500,
-                          num_chains=1, 
+                          num_chains=1,
                           device='gpu'):
 
         X = self.X
@@ -390,7 +390,7 @@ class SKIM():
         # args -- needed: num-chains
         # num_dimensions
         # active dimensions
-        
+
         if labels is None:
             labs = [str(_) for _ in range(X.shape[1])]
         else:
@@ -404,10 +404,10 @@ class SKIM():
         # do inference
         rng_key = random.PRNGKey(self.seed)
         samples = self.run_inference(self.model,
-                                     rng_key, 
+                                     rng_key,
                                      X, Y, hypers,
-                                     num_warmup=num_warmup, 
-                                     num_chains=num_chains, 
+                                     num_warmup=num_warmup,
+                                     num_chains=num_chains,
                                      num_samples=num_samples)
 
         # compute the mean and square root variance of each coefficient theta_i
@@ -424,12 +424,12 @@ class SKIM():
             print("[dimension %02d/%02d]  %s:\t%.2e +- %.2e" % (dim + 1, X.shape[1], inactive, mean, std))
 
         print("Identified a total of %d active dimensions." % (len(active_dimensions)))
-        
-        
+
+
         # Compute the mean and square root variance of coefficients theta_ij for i,j active dimensions.
         # Note that the resulting numbers are only meaningful for i != j.
         if len(active_dimensions) > 0:
-            
+
             dim_pairs = np.array(list(itertools.product(active_dimensions, active_dimensions)))
             means, stds = vmap(lambda dim_pair: self.analyze_pair_of_dimensions(samples, X, Y,
                                                                           dim_pair[0], dim_pair[1], hypers))(dim_pairs)
@@ -442,7 +442,7 @@ class SKIM():
                 dim1, dim2 = dim_pair
                 if dim1 >= dim2:
                     continue
-                dim_pair_index += 1  
+                dim_pair_index += 1
                 lower, upper = mean - sigma * std, mean + sigma * std
                 if not (lower < 0.0 and upper > 0.0):
                     dim_pair_arr.append(dim_pair_index)
@@ -450,20 +450,20 @@ class SKIM():
                     format_str = "Identified pairwise interaction between dimensions %d and %d: %.2e +- %.2e"
                     print(format_str % (dim1 + 1, dim2 + 1, mean, std))
                     pair_labs.append(str(labs[dim1]) + ' + ' + str(labs[dim2]))
-            
+
             # Draw a single sample of coefficients theta from the posterior, where we return all singleton
             # coefficients theta_i and pairwise coefficients theta_ij for i, j active dimensions. We use the
             # final MCMC sample obtained from the HMC sampler.
-      
-            
+
+
             ## Get posterior samples from the sample_theta_space_modified() method
             thetas = self.sample_theta_posterior(X, Y, active_dimensions, samples['msq'][-1], samples['lambda'][-1],
-                                                samples['eta1'][-1], samples['xisq'][-1], hypers['c'], 
+                                                samples['eta1'][-1], samples['xisq'][-1], hypers['c'],
                                                 samples['var_obs'][-1], num_samples, dim_pair_arr)
             print("Active dimensions: " + str(active_dimensions))
-            
+
             ##  Visualize the posterior from the example with corner
-            
+
             labels = ['dim '+str(i) for i in active_dimensions]
             active_dimensions = active_dimensions + dim_pair_arr
             if len(dim_pair_name) != 0:
@@ -472,7 +472,7 @@ class SKIM():
             #fig = corner.corner(thetas, labels = labels);
             return active_dimensions, thetas, labels, pair_labs
         else:
-            return active_dimensions, [], []
+            return active_dimensions, [], [], []
 
 
     def make_corner_plot(self, thetas, labels):
